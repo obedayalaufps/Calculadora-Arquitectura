@@ -24,7 +24,7 @@ start:
 
     ; --- FILA 2: OPERANDO 1 (Color Amarillo - 0Eh) ---
     mov dh, 02h         ; Fila 2
-    mov dl, 05h         
+    mov dl, 05h         ; Columna 5
     mov bl, 0Eh         ; Atributo Amarillo
     mov si, p1
     call imprimirColor
@@ -46,7 +46,7 @@ start:
     mov dh, 06h         ; Fila 6
     mov dl, 05h
     mov bl, 0Dh         ; Atributo Magenta
-    mov si, msgOper     ; <--- Referencia actualizada
+    mov si, msgOper     ; Referencia actualizada
     call imprimirColor
 
     mov ah, 01h         ; Leer signo (+,-,*,/)
@@ -72,16 +72,16 @@ start:
     jmp .preparar_ax
 .resta:
     sub al, cl
-    das                 ; Ajuste decimal tras resta[cite: 6]
+    das                 ; Ajuste decimal tras resta
     jmp .preparar_ax
 .multi:
-    mul cl              ; AX = AL * CL[cite: 6]
+    mul cl              ; AX = AL * CL
     jmp .mostrar_res
 .divi:
     cmp cl, 0
     je .error_div
     xor ah, ah
-    div cl              ; AL = Cociente[cite: 6]
+    div cl              ; AL = Cociente
     jmp .preparar_ax
 
 .preparar_ax:
@@ -96,13 +96,13 @@ start:
     mov si, msgR
     call imprimirColor
     pop ax
-    call imprimirAX     ; Conversión Binario -> ASCII[cite: 6]
+    call imprimirAX     ; Conversión Binario -> ASCII
     jmp .esperar_f1
 
 .error_div:
     mov dh, 08h
     mov dl, 05h
-    mov bl, 0Ch         ; Rojo para el error[cite: 4]
+    mov bl, 0Ch         ; Rojo para el error
     mov si, errDiv
     call imprimirColor
 
@@ -116,25 +116,25 @@ start:
 
 .bucle_f1:
     mov ah, 00h
-    int 16h             ; Leer teclado del BIOS[cite: 5]
-    cmp ah, 3Bh         ; Scan code de F1[cite: 5]
+    int 16h             ; Leer teclado del BIOS
+    cmp ah, 3Bh         ; Scan code de F1
     jne .bucle_f1       
 
-    mov ah, 4Ch         ; Retornar al sistema[cite: 4]
+    mov ah, 4Ch         ; Retornar al sistema
     int 21h
 
 ; --- SUBRUTINAS ---
 
-imprimirColor:          ; Imprime SI en (DH, DL) con color BL[cite: 4]
+imprimirColor:          ; Imprime SI en (DH, DL) con color BL
 .sig_char:
     mov al, [si]
     cmp al, "$"
     je .ret_imp
     push si
-    mov ah, 02h         ; Posicionar cursor[cite: 4]
+    mov ah, 02h         ; Posicionar cursor
     xor bh, bh
     int 10h
-    mov ah, 09h         ; Escribir con atributo[cite: 4]
+    mov ah, 09h         ; Escribir con atributo
     mov cx, 1
     int 10h
     pop si
@@ -147,10 +147,10 @@ imprimirColor:          ; Imprime SI en (DH, DL) con color BL[cite: 4]
 leerDigito:
     mov ah, 01h
     int 21h
-    sub al, 30h         ; Convertir de ASCII a valor numérico[cite: 6]
+    sub al, 30h         ; Convertir de ASCII a valor numérico
     ret
 
-imprimirAX:             ; Imprime AX en decimal[cite: 6]
+imprimirAX:             ; Imprime AX en decimal
     mov bx, 10
     xor cx, cx
 .divide:
@@ -163,7 +163,7 @@ imprimirAX:             ; Imprime AX en decimal[cite: 6]
 .popDigit:
     pop dx
     add dl, 30h
-    mov ah, 02h         ; Imprimir carácter[cite: 4]
+    mov ah, 02h         ; Imprimir carácter
     int 21h
     loop .popDigit
     ret
