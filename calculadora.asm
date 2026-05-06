@@ -3,7 +3,7 @@ ORG 100h
 section .data
     p1       db "Operando 1 (0-9): ", "$"
     p2       db "Operando 2 (0-9): ", "$"
-    msgOper  db "Operacion (+,-,*,/): ", "$" ; <--- Cambiado de pOp a msgOper
+    msgOper  db "Operacion (+,-,*,/): ", "$" 
     msgR     db "Resultado: ", "$"
     msgF1    db "Presione F1 para salir...", "$"
     errDiv   db "Error: Div / 0", "$"
